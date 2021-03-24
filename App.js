@@ -6,6 +6,7 @@ import { Provider } from 'react-redux';
 
 import productsReducer from './store/reducers/products';
 
+import ShopNavigator from './navigation/ShopNavigator';
 const rootReducer = combineReducers({
   products: productsReducer,
 });
@@ -15,10 +16,7 @@ const store = createStore(rootReducer);
 export default function App() {
   return (
     <Provider store={store}>
-      <View style={styles.container}>
-        <Text>Open up App.js to start working on your app!</Text>
-        <StatusBar style='auto' />
-      </View>
+      <ShopNavigator />
     </Provider>
   );
 }
