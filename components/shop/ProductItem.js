@@ -1,27 +1,45 @@
 import React from 'react';
-import { StyleSheet, View, Text, Image, Button } from 'react-native';
+import {
+  StyleSheet,
+  View,
+  Text,
+  Image,
+  Button,
+  TouchableOpacity,
+  TouchableNativeFeedback,
+  Platform,
+} from 'react-native';
 import Colors from '../../constants/Colors';
 
 const ProductItem = props => {
+  let TouchableCmp = TouchableOpacity;
+  if (Platform.OS === 'android' && Platform.Version >= 21) {
+    TouchableCmp = TouchableNativeFeedback;
+  }
+
   return (
     <View style={styles.product}>
-      <Image style={styles.image} source={{ uri: props.imageUrl }} />
-      <View style={styles.details}>
-        <Text style={styles.title}>{props.title}</Text>
-        <Text style={styles.price}>${props.price.toFixed(2)}</Text>
-      </View>
-      <View style={styles.actions}>
-        <Button
-          color={Colors.primary}
-          title='Details'
-          onPress={props.onViewDetail}
-        />
-        <Button
-          color={Colors.primary}
-          title='To Cart'
-          onPress={props.onAddToCart}
-        />
-      </View>
+      <TouchableCmp onPress={props.onViewDetail} useForeground>
+        <View style={styles.touchable}>
+          <Image style={styles.image} source={{ uri: props.imageUrl }} />
+          <View style={styles.details}>
+            <Text style={styles.title}>{props.title}</Text>
+            <Text style={styles.price}>${props.price.toFixed(2)}</Text>
+          </View>
+          <View style={styles.actions}>
+            <Button
+              color={Colors.primary}
+              title='Details'
+              onPress={props.onViewDetail}
+            />
+            <Button
+              color={Colors.primary}
+              title='To Cart'
+              onPress={props.onAddToCart}
+            />
+          </View>
+        </View>
+      </TouchableCmp>
     </View>
   );
 };
@@ -38,6 +56,10 @@ const styles = StyleSheet.create({
     height: 300,
     margin: 20,
     overflow: 'hidden',
+  },
+  touchable: {
+    width: '100%',
+    height: '100%',
   },
   image: {
     width: '100%',
