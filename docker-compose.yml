@@ -3,11 +3,7 @@ services:
   app:
     container_name: shopify
     build: .
-    ports:
-      - '19002:19002'
-      - '19000:19000'
-      - '19006:19006'
-      - '19001:19001'
+    network_mode: host
     volumes:
       - .:/usr/src/app
     restart: always

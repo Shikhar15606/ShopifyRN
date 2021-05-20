@@ -1,3 +1,3 @@
 ```DO
-sudo docker run --net=host -it shopify_app
+docker-compose up
 ```
