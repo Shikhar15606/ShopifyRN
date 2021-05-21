@@ -1,6 +1,5 @@
 import { ADD_TO_CART } from '../actions/cart';
 import CartItem from '../../models/cart-item';
-import { add } from 'react-native-reanimated';
 
 const initialState = {
   items: {},
