@@ -10,7 +10,9 @@ import { deleteProduct } from '../../store/actions/products';
 const UserProductsScreen = props => {
   const userProducts = useSelector(state => state.products.userProducts);
   const dispatch = useDispatch();
-
+  const editProductHandler = id => {
+    props.navigation.navigate('EditProduct', { productId: id });
+  };
   return (
     <FlatList
       data={userProducts}
@@ -20,9 +22,17 @@ const UserProductsScreen = props => {
           imageUrl={itemData.item.imageUrl}
           title={itemData.item.title}
           price={itemData.item.price}
-          onSelect={() => {}}
+          onSelect={() => {
+            editProductHandler(itemData.item.id);
+          }}
         >
-          <Button color={Colors.primary} title='Edit' onPress={() => {}} />
+          <Button
+            color={Colors.primary}
+            title='Edit'
+            onPress={() => {
+              editProductHandler(itemData.item.id);
+            }}
+          />
           <Button
             color={Colors.primary}
             title='Delete'
@@ -38,7 +48,7 @@ const UserProductsScreen = props => {
 
 UserProductsScreen.navigationOptions = navData => {
   return {
-    headerTitle: 'All Products',
+    headerTitle: 'My Products',
     headerLeft: (
       <HeaderButtons HeaderButtonComponent={CustomHeaderButton}>
         <Item
@@ -53,10 +63,10 @@ UserProductsScreen.navigationOptions = navData => {
     headerRight: (
       <HeaderButtons HeaderButtonComponent={CustomHeaderButton}>
         <Item
-          title='Cart'
-          iconName={Platform.OS === 'android' ? 'md-cart' : 'ios-cart'}
+          title='Add'
+          iconName={Platform.OS === 'android' ? 'md-create' : 'ios-create'}
           onPress={() => {
-            navData.navigation.navigate('Cart');
+            navData.navigation.navigate('EditProduct');
           }}
         />
       </HeaderButtons>
