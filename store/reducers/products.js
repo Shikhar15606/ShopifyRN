@@ -30,7 +30,7 @@ export default (state = initialState, action) => {
       const userproductIndex = state.userProducts.findIndex(
         product => product.id === action.id
       );
-      const availableproductIndex = state.userProducts.findIndex(
+      const availableproductIndex = state.availableProducts.findIndex(
         product => product.id === action.id
       );
       const updatedProduct = new Product(
