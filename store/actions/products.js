@@ -7,24 +7,32 @@ export const SET_PRODUCTS = 'SET_PRODUCTS';
 export const fetchProducts = () => {
   return async dispatch => {
     // execute any async code here and then dispatch action
-    const response = await fetch(
-      'https://shopify15606-default-rtdb.firebaseio.com/products.json'
-    );
-    const resData = await response.json();
-    let loadedProducts = [];
-    for (let key in resData) {
-      loadedProducts.push(
-        new Product(
-          key,
-          'u1',
-          resData[key].title,
-          resData[key].imageUrl,
-          resData[key].description,
-          resData[key].price
-        )
+    try {
+      const response = await fetch(
+        'https://shopify15606-default-rtdb.firebaseio.com/products.json'
       );
+      if (response.ok === false) {
+        throw new Error('Something went wrong');
+      }
+      const resData = await response.json();
+      let loadedProducts = [];
+      for (let key in resData) {
+        loadedProducts.push(
+          new Product(
+            key,
+            'u1',
+            resData[key].title,
+            resData[key].imageUrl,
+            resData[key].description,
+            resData[key].price
+          )
+        );
+      }
+      dispatch({ type: SET_PRODUCTS, products: loadedProducts });
+    } catch (err) {
+      // send analytis to your server
+      throw err;
     }
-    dispatch({ type: SET_PRODUCTS, products: loadedProducts });
   };
 };
 
