@@ -37,7 +37,18 @@ export const fetchProducts = () => {
 };
 
 export const deleteProduct = productId => {
-  return { type: DELETE_PRODUCT, productId: productId };
+  return async dispatch => {
+    await fetch(
+      `https://shopify15606-default-rtdb.firebaseio.com/products/${productId}.json`,
+      {
+        method: 'DELETE',
+      }
+    );
+    dispatch({
+      type: DELETE_PRODUCT,
+      productId: productId,
+    });
+  };
 };
 
 export const createProduct = (title, description, imageUrl, price) => {
@@ -65,10 +76,23 @@ export const createProduct = (title, description, imageUrl, price) => {
 };
 
 export const updateProduct = (id, title, description, imageUrl) => {
-  // modern js syntax if the key and value name is same
-  return {
-    type: UPDATE_PRODUCT,
-    id: id,
-    productData: { title, description, imageUrl },
+  return async dispatch => {
+    await fetch(
+      `https://shopify15606-default-rtdb.firebaseio.com/products/${id}.json`,
+      {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          title,
+          description,
+          imageUrl,
+        }),
+      }
+    );
+    dispatch({
+      type: UPDATE_PRODUCT,
+      id: id,
+      productData: { title, description, imageUrl },
+    });
   };
 };
