@@ -37,6 +37,20 @@ const ProductsOverviewScreen = props => {
     loadProducts();
   }, [loadProducts]);
 
+  useEffect(() => {
+    const willFocusSub = props.navigation.addListener(
+      'willFocus',
+      () => {
+        loadProducts();
+      },
+      [loadProducts]
+    );
+    // cleanup fxn when component is destroyed or useEffect reruns
+    return () => {
+      willFocusSub.remove();
+    };
+  });
+
   const selectItemHandler = (id, title) => {
     props.navigation.navigate('ProductDetail', {
       productId: id,
