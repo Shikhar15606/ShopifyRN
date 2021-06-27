@@ -1,4 +1,38 @@
+import Order from '../../models/order';
 export const ADD_ORDER = 'ADD_ORDER';
+export const SET_ORDERS = 'SET_ORDERS';
+
+export const fetchOrders = () => {
+  return async dispatch => {
+    try {
+      const response = await fetch(
+        'https://shopify15606-default-rtdb.firebaseio.com/orders/u1.json'
+      );
+      if (response.ok === false) {
+        throw new Error('Something went wrong');
+      }
+      const resData = await response.json();
+      let loadedOrders = [];
+      for (let key in resData) {
+        loadedOrders.push(
+          new Order(
+            key,
+            resData[key].cartItems,
+            resData[key].totalAmount,
+            new Date(resData[key].date)
+          )
+        );
+      }
+      dispatch({
+        type: SET_ORDERS,
+        orders: loadedOrders,
+      });
+    } catch (err) {
+      // send analytis to your server
+      throw err;
+    }
+  };
+};
 
 export const addOrder = (items, totalAmount) => {
   return async dispatch => {
