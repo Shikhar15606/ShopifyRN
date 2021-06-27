@@ -1,5 +1,13 @@
-import React from 'react';
-import { View, Text, FlatList, Button, StyleSheet } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import {
+  View,
+  Text,
+  FlatList,
+  Button,
+  StyleSheet,
+  ActivityIndicator,
+  Alert,
+} from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import CartItem from '../../components/shop/CartItem';
 import Colors from '../../constants/Colors';
@@ -10,6 +18,16 @@ import Card from '../../components/ui/Card';
 const CartScreen = props => {
   const dispatch = useDispatch();
   const cartTotalAmount = useSelector(state => state.cart.totalAmount);
+
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    if (error) {
+      Alert.alert('An error occured', error, [{ text: 'Okay' }]);
+    }
+  }, [error]);
+
   const cartItems = useSelector(state => {
     let transformedCartItems = [];
     for (let key in state.cart.items) {
@@ -25,6 +43,15 @@ const CartScreen = props => {
       return a.productId > b.productId ? 1 : -1;
     });
   });
+
+  if (isLoading) {
+    return (
+      <View style={styles.centered}>
+        <ActivityIndicator size='large' color={Colors.primary} />
+      </View>
+    );
+  }
+
   return (
     <View style={styles.screen}>
       <Card style={styles.summary}>
@@ -38,8 +65,15 @@ const CartScreen = props => {
           title='Order Now'
           color={Colors.accent}
           disabled={cartItems.length === 0}
-          onPress={() => {
-            dispatch(addOrder(cartItems, cartTotalAmount));
+          onPress={async () => {
+            setIsLoading(true);
+            setError(null);
+            try {
+              await dispatch(addOrder(cartItems, cartTotalAmount));
+            } catch (err) {
+              setError(err.message);
+            }
+            setIsLoading(false);
           }}
         />
       </Card>
@@ -85,6 +119,11 @@ const styles = StyleSheet.create({
   },
   amount: {
     color: Colors.primary,
+  },
+  centered: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 
