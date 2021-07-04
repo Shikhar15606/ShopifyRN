@@ -3,10 +3,11 @@ export const ADD_ORDER = 'ADD_ORDER';
 export const SET_ORDERS = 'SET_ORDERS';
 
 export const fetchOrders = () => {
-  return async dispatch => {
+  return async (dispatch, getState) => {
+    const userId = getState().auth.userId;
     try {
       const response = await fetch(
-        'https://shopify15606-default-rtdb.firebaseio.com/orders/u1.json'
+        `https://shopify15606-default-rtdb.firebaseio.com/orders/${userId}.json`
       );
       if (response.ok === false) {
         throw new Error('Something went wrong');
@@ -37,9 +38,10 @@ export const fetchOrders = () => {
 export const addOrder = (items, totalAmount) => {
   return async (dispatch, getState) => {
     const token = getState().auth.token;
+    const userId = getState().auth.userId;
     const date = new Date();
     const response = await fetch(
-      `https://shopify15606-default-rtdb.firebaseio.com/orders/u1.json?auth=${token}`,
+      `https://shopify15606-default-rtdb.firebaseio.com/orders/${userId}.json?auth=${token}`,
       {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },

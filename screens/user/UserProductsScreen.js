@@ -7,6 +7,7 @@ import {
   ActivityIndicator,
   StyleSheet,
   View,
+  Text,
 } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import ProductItem from '../../components/shop/ProductItem';
@@ -59,7 +60,13 @@ const UserProductsScreen = props => {
       </View>
     );
   }
-
+  if (!isLoading && userProducts.length === 0) {
+    return (
+      <View style={styles.centered}>
+        <Text>No products found. Start adding some</Text>
+      </View>
+    );
+  }
   return (
     <FlatList
       data={userProducts}
