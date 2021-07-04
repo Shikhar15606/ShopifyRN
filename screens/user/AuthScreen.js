@@ -7,6 +7,7 @@ import {
   ActivityIndicator,
   Button,
   Alert,
+  Platform,
 } from 'react-native';
 import Input from '../../components/ui/Input';
 import Card from '../../components/ui/Card';
@@ -44,7 +45,7 @@ const formReducer = (state, action) => {
   return state;
 };
 
-const AuthScreen = () => {
+const AuthScreen = props => {
   const [isSignup, setisSignup] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, seterror] = useState(null);
@@ -99,10 +100,11 @@ const AuthScreen = () => {
     setIsLoading(true);
     try {
       await dispatch(action);
+      props.navigation.navigate('Shop');
     } catch (err) {
+      setIsLoading(false);
       seterror(err.message);
     }
-    setIsLoading(false);
   };
 
   return (
