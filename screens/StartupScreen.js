@@ -18,12 +18,13 @@ const StartupScreen = props => {
         const transformedData = JSON.parse(userData);
         const { token, userId, expiryTime } = transformedData;
         const expTime = new Date(expiryTime);
-        if (expiryTime <= new Date().getTime() || !token || !userId) {
+        if (expTime <= new Date() || !token || !userId) {
           props.navigation.navigate('Auth');
           return;
         }
+        const remainingExpTime = expTime.getTime() - new Date().getTime();
         props.navigation.navigate('Shop');
-        dispatch(authenticate(token, userId));
+        dispatch(authenticate(token, userId, remainingExpTime));
       } catch (e) {
         props.navigation.navigate('Auth');
         return;
